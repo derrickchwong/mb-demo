@@ -21,7 +21,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Testcontainers
-@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ExtendWith(MockitoExtension.class)
 public class EndToEndTest {
@@ -40,6 +39,7 @@ public class EndToEndTest {
         dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        dynamicPropertyRegistry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
     }
 
 
@@ -48,9 +48,9 @@ public class EndToEndTest {
     
     @Test
     public void whenDataIsValidInsertIntoDb() throws Exception{
-        mockMvc.perform(post("/todos").content("{'description':'test'}")
+        mockMvc.perform(post("/todos").content("{\"description\":\"test\"}")
         .contentType("application/json"))
-        .andExpect(status().isOk());
+        .andExpect(status().isCreated());
     }
 
 
