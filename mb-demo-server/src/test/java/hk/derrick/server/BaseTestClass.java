@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
+import org.springframework.web.context.WebApplicationContext;
 
 
 @ExtendWith(SpringExtension.class)
@@ -22,12 +23,14 @@ public class BaseTestClass {
 
     @Autowired
     private ToDoItemController ToDoItemController;
-
+    @Autowired
+	WebApplicationContext context;
 
     @BeforeEach
     public void setup() {
         
-        StandaloneMockMvcBuilder standaloneMockMvcBuilder = MockMvcBuilders.standaloneSetup(ToDoItemController);
-        RestAssuredMockMvc.standaloneSetup(standaloneMockMvcBuilder);
+        // StandaloneMockMvcBuilder standaloneMockMvcBuilder = MockMvcBuilders.standaloneSetup(ToDoItemController);
+        // RestAssuredMockMvc.standaloneSetup(standaloneMockMvcBuilder);
+        RestAssuredMockMvc.webAppContextSetup(context);
     }
 }

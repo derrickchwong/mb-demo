@@ -1,9 +1,9 @@
 package hk.derrick.server;
 
-import hk.derrick.server.ToDoItem;
+import hk.derrick.core.TodoItem;
 import hk.derrick.server.ToDoItemRepository;
 import hk.derrick.server.ToDoItemService;
-import hk.derrick.server.ToDoItem.Status;
+import hk.derrick.core.TodoItem.Status;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class ToDoItemServiceTest {
     @Test
     public void testSave() throws IllegalArgumentException {
         // Create a ToDoItem object.
-        ToDoItem toDoItem = new ToDoItem();
+        TodoItem toDoItem = new TodoItem();
         
         toDoItem.setDescription("This is a test ToDo item.");
         
@@ -37,17 +38,17 @@ public class ToDoItemServiceTest {
 
         // Verify that the ToDoItem object was saved to the repository.
 
-        ToDoItem expected = new ToDoItem();
+        TodoItem expected = new TodoItem();
         expected.setDescription("This is a test ToDo item.");
         expected.setId(UUID.randomUUID().toString());
-        expected.setCreatedDate(new Date());
+        expected.setCreatedDate(new Timestamp(System.currentTimeMillis()).toInstant());
         expected.setStatus(Status.NEW);
 
         Mockito.when(toDoItemRepository.save(toDoItem))
             .thenReturn(expected);
 
         // Call the save() method.
-        ToDoItem savedToDoItem = toDoItemService.save(toDoItem);
+        TodoItem savedToDoItem = toDoItemService.save(toDoItem);
 
         
 
@@ -62,9 +63,9 @@ public class ToDoItemServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSaveWithInvalidDueDate() throws IllegalArgumentException {
         // Create a ToDoItem object with an invalid due date.
-        ToDoItem toDoItem = new ToDoItem();
+        TodoItem toDoItem = new TodoItem();
         toDoItem.setDescription("This is a test ToDo item.");
-        toDoItem.setDueDate(new Date(System.currentTimeMillis() - 1000));
+        toDoItem.setDueDate(new Timestamp(System.currentTimeMillis() - 10000000000L).toInstant());
 
         // Create a ToDoItemService object.
         ToDoItemService toDoItemService = new ToDoItemService(toDoItemRepository);

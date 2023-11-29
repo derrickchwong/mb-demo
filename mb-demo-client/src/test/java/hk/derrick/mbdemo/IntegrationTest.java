@@ -26,12 +26,24 @@ public class IntegrationTest {
   private MockMvc mockMvc;
 
   @Test
-  public void whenDueDateIsEarlierThenReturnError() throws Exception {
+  public void whenNewTodoButStatusAlreadyCompletedReturnBadRequest() throws Exception {
     mockMvc.perform(post("/todos")
         .contentType(MediaType.APPLICATION_JSON)
-        .content("{\"description\":\"test desc\",\"dueDate\":\"2012-04-23T18:25:43.511Z\"}")
+        .content("{\"description\":\"test desc2\",\"status\":\"COMPLETED\"}")
     ).andExpect(
         status().isBadRequest()
+    );
+
+  }
+
+
+  @Test
+  public void whenDataIsValidThenReturnOk() throws Exception {
+    mockMvc.perform(post("/todos")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\"description\": \"test desc\"}")
+    ).andExpect(
+        status().isCreated()
     );
 
   }

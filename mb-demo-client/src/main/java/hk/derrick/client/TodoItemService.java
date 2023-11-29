@@ -1,11 +1,13 @@
 package hk.derrick.client;
 
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.service.annotation.PostExchange;
+
+import hk.derrick.core.TodoItem;
 
 public interface TodoItemService {
 
-  @PostMapping("/todos")
+  @PostExchange("/todos")
   TodoItem createTodoItem(@RequestBody TodoItem todoItem);
 
 }

@@ -1,6 +1,6 @@
 package hk.derrick.server;
 
-import hk.derrick.server.ToDoItem;
+import hk.derrick.core.TodoItem;
 import hk.derrick.server.ToDoItemController;
 import hk.derrick.server.ToDoItemService;
 import org.junit.jupiter.api.Test;
@@ -15,11 +15,13 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import hk.derrick.core.TodoItem;
 
 @ExtendWith(MockitoExtension.class)
 public class ToDoItemControllerTest {
@@ -33,12 +35,12 @@ public class ToDoItemControllerTest {
     @Test
     public void getAllToDoItems_shouldReturnAllToDoItems() {
         // Arrange
-        ToDoItem toDoItem1 = new ToDoItem("Buy milk");
-        ToDoItem toDoItem2 = new ToDoItem("Wash car");
+        TodoItem toDoItem1 = new TodoItem("Buy milk");
+        TodoItem toDoItem2 = new TodoItem("Wash car");
         when(toDoItemService.getAll()).thenReturn(List.of(toDoItem1, toDoItem2));
             
         // Act
-        List<ToDoItem> actual = toDoItemController.getAllToDoItems();
+        List<TodoItem> actual = toDoItemController.getAllToDoItems();
 
         // Assert
         assertEquals(2, actual.spliterator().getExactSizeIfKnown());
@@ -49,11 +51,11 @@ public class ToDoItemControllerTest {
     @Test
     public void saveToDoItem_shouldSaveToDoItem() {
         // Arrange
-        ToDoItem toDoItem = new ToDoItem("Buy milk");
+        TodoItem toDoItem = new TodoItem("Buy milk");
         when(toDoItemService.save(toDoItem)).thenReturn(toDoItem);
 
         // Act
-        ResponseEntity<ToDoItem> actual = toDoItemController.saveToDoItem(toDoItem);
+        ResponseEntity<TodoItem> actual = toDoItemController.saveToDoItem(toDoItem);
 
         // Assert
         assertEquals(HttpStatus.CREATED, actual.getStatusCode());
@@ -63,10 +65,10 @@ public class ToDoItemControllerTest {
     @Test
     public void saveToDoItem_shouldReturnBadRequest_whenToDoItemIsInvalid() {
         // Arrange
-        ToDoItem toDoItem = new ToDoItem("");
+        TodoItem toDoItem = new TodoItem("");
 
         // date of yesterday
-        toDoItem.setDueDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+        toDoItem.setDueDate(new Timestamp(System.currentTimeMillis() - 24 * 60 * 60 * 1000).toInstant());
 
         // when todoitemservice.save is called, return http status bad request 
         when(toDoItemService.save(toDoItem))
@@ -75,7 +77,7 @@ public class ToDoItemControllerTest {
 
 
         // Act
-        ResponseEntity<ToDoItem> actual = toDoItemController.saveToDoItem(toDoItem);
+        ResponseEntity<TodoItem> actual = toDoItemController.saveToDoItem(toDoItem);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());

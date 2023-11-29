@@ -9,7 +9,8 @@ public class TodoItemServiceConfig {
 
   @Bean
   public TodoItemServiceClient todoItemService(){
-    TodoItemServiceClient todoItemServiceClient = new TodoItemServiceClient(WebClient.builder()
+    TodoItemServiceClient todoItemServiceClient = new TodoItemServiceClient(
+      WebClient.builder()
         .baseUrl("http://localhost:8080")
         .build());
     return todoItemServiceClient;

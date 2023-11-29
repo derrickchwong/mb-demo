@@ -14,7 +14,8 @@
 	<packaging>pom</packaging>
 	
     <modules>
-        <module>mb-demo-client</module>
+        <module>mb-demo-core</module>
+		<module>mb-demo-client</module>
 		<module>mb-demo-server</module>
 	</modules>
 	

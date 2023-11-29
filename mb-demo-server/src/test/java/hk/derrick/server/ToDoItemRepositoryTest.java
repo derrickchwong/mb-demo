@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hk.derrick.server.ToDoItem;
+import hk.derrick.core.TodoItem;
 import hk.derrick.server.ToDoItemRepository;
 // import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -35,35 +37,35 @@ public class ToDoItemRepositoryTest {
       
     @Test
     public void testFindById() {
-        ToDoItem toDoItem = new ToDoItem();
+        TodoItem toDoItem = new TodoItem();
         
         toDoItem.setId(UUID.randomUUID().toString());
         toDoItem.setDescription("Read a book about JPA");
-        toDoItem.setDueDate(new Date(System.currentTimeMillis()));
+        toDoItem.setDueDate(new Timestamp(System.currentTimeMillis()).toInstant());
 
         toDoItemRepository.save(toDoItem);
 
-        ToDoItem foundToDoItem = toDoItemRepository.findById(toDoItem.getId()).get();
+        TodoItem foundToDoItem = toDoItemRepository.findById(toDoItem.getId()).get();
 
         assertEquals(toDoItem, foundToDoItem);
     }
 
     @Test
     public void testFindAll() {
-        ToDoItem toDoItem1 = new ToDoItem();
+        TodoItem toDoItem1 = new TodoItem();
         toDoItem1.setId(UUID.randomUUID().toString());
         toDoItem1.setDescription("Read a book about JPA");
-        toDoItem1.setDueDate(new Date(System.currentTimeMillis()));
+        toDoItem1.setDueDate(new Timestamp(System.currentTimeMillis()).toInstant());
 
-        ToDoItem toDoItem2 = new ToDoItem();
+        TodoItem toDoItem2 = new TodoItem();
         toDoItem2.setId(UUID.randomUUID().toString());
         toDoItem2.setDescription("Read a book about Spring Boot");
-        toDoItem2.setDueDate(new Date(System.currentTimeMillis()));
+        toDoItem2.setDueDate(new Timestamp(System.currentTimeMillis()).toInstant());
 
         toDoItemRepository.save(toDoItem1);
         toDoItemRepository.save(toDoItem2);
 
-        List<ToDoItem> toDoItems = toDoItemRepository.findAll();
+        List<TodoItem> toDoItems = toDoItemRepository.findAll();
 
         assertEquals(2, toDoItems.size());
         assertTrue(toDoItems.contains(toDoItem1));
@@ -72,21 +74,21 @@ public class ToDoItemRepositoryTest {
 
     @Test
     public void testFindByDueDate() {
-        ToDoItem toDoItem1 = new ToDoItem();
+        TodoItem toDoItem1 = new TodoItem();
         toDoItem1.setId(UUID.randomUUID().toString());
         toDoItem1.setDescription("Read a book about JPA");
-        Date now = new Date(System.currentTimeMillis());
+        Instant now = new Timestamp(System.currentTimeMillis()).toInstant();
         toDoItem1.setDueDate(now);
 
-        ToDoItem toDoItem2 = new ToDoItem();
+        TodoItem toDoItem2 = new TodoItem();
         toDoItem2.setId(UUID.randomUUID().toString());
         toDoItem2.setDescription("Read a book about Spring Boot");
-        toDoItem2.setDueDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
+        toDoItem2.setDueDate(new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60 * 24).toInstant());
 
         toDoItemRepository.save(toDoItem1);
         toDoItemRepository.save(toDoItem2);
 
-        List<ToDoItem> toDoItems = toDoItemRepository.findByDueDate(now);
+        List<TodoItem> toDoItems = toDoItemRepository.findByDueDate(now);
 
         assertEquals(1, toDoItems.size());
         assertTrue(toDoItems.contains(toDoItem1));

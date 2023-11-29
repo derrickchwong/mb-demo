@@ -14,6 +14,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
+import hk.derrick.core.TodoItem;
 
 @Configuration
 @EnableKafka
@@ -28,14 +29,18 @@ public class KafkaConfig {
 
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<?, ToDoItem> todoConsumerFactory() {
+  public ConcurrentKafkaListenerContainerFactory<?, TodoItem> todoConsumerFactory() {
     Map<String, Object> props = new HashMap<>();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, applicationId);
 
-    ConsumerFactory<String, ToDoItem> consumerFactory = new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(ToDoItem.class));
 
-    ConcurrentKafkaListenerContainerFactory<String, ToDoItem> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    var deserializer = new JsonDeserializer<>(TodoItem.class);
+    deserializer.addTrustedPackages("hk.derrick.client", "hk.derrick.server", "hk.derrick.core");
+
+    ConsumerFactory<String, TodoItem> consumerFactory = new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
+
+    ConcurrentKafkaListenerContainerFactory<String, TodoItem> factory = new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(consumerFactory);
 
     return factory;
