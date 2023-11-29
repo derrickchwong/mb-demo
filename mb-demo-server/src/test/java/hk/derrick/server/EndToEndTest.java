@@ -1,0 +1,57 @@
+package hk.derrick.server;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@Testcontainers
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ExtendWith(MockitoExtension.class)
+public class EndToEndTest {
+
+    @Container
+    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:11.1")
+        .withDatabaseName("integration-tests-db").withUsername("username").withPassword("password");
+    // .withInitScript("test-data.sql");
+
+    static {
+        postgreSQLContainer.start();
+    }
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
+        dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    }
+
+
+    @Autowired
+    private MockMvc mockMvc;
+    
+    @Test
+    public void whenDataIsValidInsertIntoDb() throws Exception{
+        mockMvc.perform(post("/todos").content("{'description':'test'}")
+        .contentType("application/json"))
+        .andExpect(status().isOk());
+    }
+
+
+}
