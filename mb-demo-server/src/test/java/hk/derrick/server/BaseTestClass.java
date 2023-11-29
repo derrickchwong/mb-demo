@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.verifier.messaging.boot.AutoConfigureMessageVerifier;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
 
@@ -22,15 +20,11 @@ import org.springframework.web.context.WebApplicationContext;
 public class BaseTestClass {
 
     @Autowired
-    private ToDoItemController ToDoItemController;
-    @Autowired
 	WebApplicationContext context;
 
     @BeforeEach
     public void setup() {
         
-        // StandaloneMockMvcBuilder standaloneMockMvcBuilder = MockMvcBuilders.standaloneSetup(ToDoItemController);
-        // RestAssuredMockMvc.standaloneSetup(standaloneMockMvcBuilder);
         RestAssuredMockMvc.webAppContextSetup(context);
     }
 }

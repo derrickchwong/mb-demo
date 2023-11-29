@@ -2,14 +2,12 @@ package hk.derrick.server;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.hibernate.type.descriptor.jdbc.InstantAsTimestampJdbcType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import hk.derrick.core.TodoItem;
 import hk.derrick.core.TodoItem.Status;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 @Service
