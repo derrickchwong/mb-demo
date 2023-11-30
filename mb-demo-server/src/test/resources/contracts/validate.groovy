@@ -1,5 +1,5 @@
 import org.springframework.cloud.contract.spec.Contract
-
+[
 Contract.make {
     description "should return bad request when new todo but status already completed"
     request {
@@ -19,7 +19,7 @@ Contract.make {
     response {
         status BAD_REQUEST()
     }
-}
+},
 Contract.make {
     description "should return 201 when data is valid"
     request {
@@ -39,3 +39,4 @@ Contract.make {
         status 201
     }
 }
+]
