@@ -68,4 +68,9 @@ public class ToDoItemService {
     public List<TodoItem> getAll() {
         return toDoItemRepository.findAll();
     }
+
+    // function to get todoitem by id 
+    public TodoItem getById(String id) {
+        return toDoItemRepository.findById(id).orElse(null);
+    }
 }
