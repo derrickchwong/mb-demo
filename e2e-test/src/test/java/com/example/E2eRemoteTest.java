@@ -20,8 +20,7 @@ public class E2eRemoteTest {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability("browserName", "chrome");
 
-        // WebDriver driver = new ChromeDriver();
-        WebDriver driver = new RemoteWebDriver(
+        RemoteWebDriver driver = new RemoteWebDriver(
                 new URL("http://admin:admin@34.110.186.13/wd/hub"),
                 desiredCapabilities);
 
