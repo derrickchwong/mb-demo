@@ -24,6 +24,7 @@ public class ToDoItemService {
 
     // function to save todoitem to db 
     public TodoItem save(TodoItem toDoItem) throws IllegalArgumentException{
+
         log.info("received todo item");
         if (toDoItem.getDueDate() != null) {
             // print due date in log

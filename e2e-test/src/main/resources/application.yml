@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  application: 
+    name: server
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    

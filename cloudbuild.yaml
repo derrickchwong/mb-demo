@@ -1,0 +1,5 @@
+steps:
+- name: maven:3-eclipse-temurin-17
+  args: ['test']
+  entrypoint: 'mvn'
+  dir: 'e2e-test'
